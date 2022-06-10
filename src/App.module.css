@@ -7,7 +7,7 @@
   z-index: 1;
   border-radius: 20px;
   align-self: center;
-  padding: 5px;
+  padding: 10px;
   overflow: auto;
   text-align: center;
   -ms-overflow-style: none;
@@ -32,8 +32,8 @@
 .rightBar {
   width: 270px;
   height: 60%;
-  left: 1010px;
-  padding: 5px;
+  left: 1005px;
+  padding: 10px;
   background-color: white;
   position: absolute;
   z-index: 1;
