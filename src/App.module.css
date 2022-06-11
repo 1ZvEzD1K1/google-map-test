@@ -32,7 +32,7 @@
 .rightBar {
   width: 270px;
   height: 60%;
-  left: 1005px;
+  right: 10px;
   padding: 10px;
   background-color: white;
   position: absolute;
