@@ -46,19 +46,23 @@ function App() {
   }, [mode])
 
   const addNewPlace = () => {
-    setPlaces((prew) => [
-      ...places, {
-        id: Date.now(),
-        title: title,
-        description: description,
-        img: 'img1.jpg',
-        coordinates: targetPlace,
-        target: false
-      }
-    ])
-    setModal(false)
-    setDescription("")
-    setTitle("")
+    if (title !== "" && description !== "") {
+      setPlaces((prew) => [
+        ...places, {
+          id: Date.now(),
+          title: title,
+          description: description,
+          img: 'img1.jpg',
+          coordinates: targetPlace,
+          target: false
+        }
+      ]) 
+      setModal(false)
+      setDescription("")
+      setTitle("")
+    } else {
+      alert("write something")
+    }
   }
 
 
