@@ -1,131 +1,66 @@
 import { useJsApiLoader } from "@react-google-maps/api";
-import Map from "./components/Map/Map";
+import Map, { MODES } from "./components/Map/Map";
 import { API_KEY } from "./consts";
 import s from "./App.module.css"
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { Places, center } from "./data"
 import image from "./img1.jpg"
+import Modal from "./components/Modal/Modal";
 
-const center = {
-  lat: 50.5,
-  lng: 30.5
-};
-
-const Places = [
-  {
-    id: 1,
-    title: "First",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    img: 'img1.jpg',
-    coordinates: {
-      lat: 49.5,
-      lng: 31.5
-    },
-    target: false
-  },
-  {
-    id: 2,
-    title: "Second",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    img: 'img1.jpg',
-    coordinates: {
-      lat: 48.5,
-      lng: 32.5
-    },
-    target: false
-  },
-  {
-    id: 3,
-    title: "Third",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    img: 'img1.jpg',
-    coordinates: {
-      lat: 50.5,
-      lng: 30.5
-    },
-    target: false
-  },
-  {
-    id: 4,
-    title: "Fourth",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    img: 'img1.jpg',
-    coordinates: {
-      lat: 51.5,
-      lng: 29.5
-    },
-    target: false
-  },
-  {
-    id: 5,
-    title: "Fifth",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    img: 'img1.jpg',
-    coordinates: {
-      lat: 52.5,
-      lng: 28.5
-    },
-    target: false
-  },
-  {
-    id: 6,
-    title: "Sixth",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    img: 'img1.jpg',
-    coordinates: {
-      lat: 41.5,
-      lng: 37.5
-    },
-    target: false
-  },
-  {
-    id: 7,
-    title: "Seventh",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    img: 'img1.jpg',
-    coordinates: {
-      lat: 48.5,
-      lng: 30.5
-    },
-    target: false
-  },
-  {
-    id: 8,
-    title: "Eighth",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    img: 'img1.jpg',
-    coordinates: {
-      lat: 55.5,
-      lng: 30.5
-    },
-    target: false
-  },
-  {
-    id: 9,
-    title: "Ninth",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    img: 'img1.jpg',
-    coordinates: {
-      lat: 51.5,
-      lng: 23.5
-    },
-    target: false
-  },
-  {
-    id: 10,
-    title: "Tenth",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    img: 'img1.jpg',
-    coordinates: {
-      lat: 55.5,
-      lng: 28.5
-    },
-    target: false
-  }
-]
 
 function App() {
 
   const [places, setPlaces] = useState(Places)
+  const [mode, setMode] = useState(MODES.MOVE)
+  const [modal, setModal] = useState(false)
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [targetPlace, setTargetPlace] = useState({
+    lat: null,
+    lng: null
+  })
+
+  function setTarget(id) {
+    setPlaces((prew) => {
+      return prew.map((el) => {
+        if (el.id == id) {
+          return { ...el, target: true }
+        } else {
+          return { ...el, target: false }
+        }
+      })
+    })
+  }
+
+  const toggleMode = useCallback(() => {
+    switch (mode) {
+      case MODES.MOVE:
+        setMode(MODES.SET_MARKER)
+        break;
+      case MODES.SET_MARKER:
+        setMode(MODES.MOVE)
+        break;
+      default:
+        setMode(MODES.MOVE)
+    }
+  }, [mode])
+
+  const addNewPlace = () => {
+    setPlaces((prew) => [
+      ...places, {
+        id: Date.now(),
+        title: title,
+        description: description,
+        img: 'img1.jpg',
+        coordinates: targetPlace,
+        target: false
+      }
+    ])
+    setModal(false)
+    setDescription("")
+    setTitle("")
+  }
+
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -137,21 +72,27 @@ function App() {
       <div className={s.leftBar}>
         {places && places.map((el) => {
           return (
-            <div key={el.id}>
-              <img src={image} />
+            <div key={el.id} onClick={() => setTarget(el.id)}>
+              <img src={image} alt="img" />
               <p>{el.title}</p>
             </div>
           )
         })}
       </div>
-      {isLoaded ? <Map center={center} places={places} setPlaces={setPlaces} /> : <h1>Loading...</h1>}
+      <div className={s.add}>
+        <button onClick={toggleMode}>Add an ad?</button>
+        {mode === MODES.SET_MARKER && <div>Select a place on the map</div>}
+      </div>
+      {isLoaded ? <Map center={center} places={places} setTarget={setTarget} mode={mode} setModal={setModal} setTargetPlace={setTargetPlace} /> : <h1>Loading...</h1>}
+      {modal && <Modal setModal={setModal} title={title} description={description} setTitle={setTitle} setDescription={setDescription} addNewPlace={addNewPlace} />}
       {
         places && places.filter((it) => it.target).map((el) => {
           return (
             <div key={el.id} className={s.rightBar}>
-              <img src={image} />
+              <img src={image} alt="img" />
               <p>{el.title}</p>
               <p>{el.description}</p>
+              <button onClick={() => console.log("Submit an ad " + el.id)}> Submit an ad </button>
             </div>
           )
         }

@@ -21,19 +21,12 @@ const defaultOptions = {
   fullscreenControl: false,
 };
 
-const Map = ({ center, places, setPlaces }) => {
+export const MODES = {
+  MOVE: 0,
+  SET_MARKER: 1
+}
 
-  function setTarget(id) {
-    setPlaces((prew)=>{
-      return prew.map((el)=>{
-        if (el.id == id) {
-          return {...el, target: true}
-        } else {
-          return {...el, target: false}
-        }
-      })
-    })
-  }
+const Map = ({ center, places, setTarget, mode, setModal, setTargetPlace }) => {
 
   const mapRef = React.useRef(undefined);
 
@@ -44,12 +37,24 @@ const Map = ({ center, places, setPlaces }) => {
   const onUnmount = React.useCallback(function callback(map) {
     mapRef.current = undefined;
   }, []);
+
+  const mapClick = (location) => {
+    if (mode === MODES.SET_MARKER) {
+      setModal(true)
+      setTargetPlace({
+        lat: location.latLng.lat(),
+        lng: location.latLng.lng()
+      })
+    }
+  }
+
   return (
     <div className={s.container}>
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
         zoom={5}
+        onClick={mapClick}
         onLoad={onLoad}
         onUnmount={onUnmount}
         options={defaultOptions}
